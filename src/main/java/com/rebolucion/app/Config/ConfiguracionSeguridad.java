@@ -39,8 +39,8 @@ public class ConfiguracionSeguridad {
                                 .requestMatchers("/**").permitAll()
 
                                 // endpoints privados
-                                .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
+                                //.requestMatchers("/admin/**").hasRole("ADMIN")
+                                // .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
 
                                 //Resto de enpoints - NO ESPECIFICADOS
                                 .anyRequest().authenticated()
