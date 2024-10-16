@@ -5,6 +5,8 @@ import com.rebolucion.app.Auth.AuthResponse;
 import com.rebolucion.app.Auth.Request.LoginRequest;
 import com.rebolucion.app.Dtos.Entrada.UsuarioEntradaDto;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import  com.rebolucion.app.Servicio.AuthServicio;
 public class AuthController {
     @Autowired
     private final AuthServicio authService;
+    private final Logger LOGGER = LoggerFactory.getLogger(AuthServicio.class);
 
     public AuthController(AuthServicio authService) {
        this.authService = authService;
@@ -32,6 +35,8 @@ public class AuthController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
+        LOGGER.info("Informacion recibida: " + request);
+
         return ResponseEntity.ok(authService.login(request));
     }
 }
