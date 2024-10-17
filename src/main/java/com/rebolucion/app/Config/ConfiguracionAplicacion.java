@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
+
 @Configuration
 @RequiredArgsConstructor
 public class ConfiguracionAplicacion {
@@ -31,13 +33,13 @@ public class ConfiguracionAplicacion {
     }
 
     @Bean
-    public AuthenticationProvider authenticationProvider()
-    {
-        DaoAuthenticationProvider authenticationProvider= new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(userDetailService());  // Este es tu UserDetailsService
+        provider.setPasswordEncoder(passwordEncoder());  // Usa el PasswordEncoder para verificar contraseñas
+        return provider;
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -45,8 +47,12 @@ public class ConfiguracionAplicacion {
     }
     @Bean
     public UserDetailsService userDetailService() {
-        return email -> usuarioRepositorio.findUsuarioByCorreo(email)
-                .orElseThrow(()-> new UsernameNotFoundException("User not found"));
+        return correo -> usuarioRepositorio.findUsuarioByCorreo(correo)
+                .map(usuario -> new org.springframework.security.core.userdetails.User(
+                        usuario.getCorreo(), usuario.getContra(), // Aquí debes usar los getters correspondientes
+                        new ArrayList<>()
+                ))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
     @Bean
