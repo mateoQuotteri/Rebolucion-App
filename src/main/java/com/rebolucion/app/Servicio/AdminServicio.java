@@ -37,10 +37,17 @@ public class AdminServicio {
         Usuario usuarioBuscado = usuarioRepository.findById(id).orElse(null);
         UsuarioSalidaDto usuarioEncontrado = null;
 
+        try{
         if (usuarioBuscado != null){
             usuarioEncontrado = modelMapper.map(usuarioBuscado, UsuarioSalidaDto.class);
             LOGGER.info("Usuario encontrado: {}", JsonPrinter.toString(usuarioEncontrado));
         } else LOGGER.error("Usuario no encontrado: {}", JsonPrinter.toString(usuarioBuscado));
+          return usuarioEncontrado;
+    }catch (Exception e){
+            LOGGER.info("Error: {}", e);
+
+        }
+
         return usuarioEncontrado;
     }
 }

@@ -36,7 +36,7 @@ public class ConfiguracionSeguridad {
 
                                 // endpoinds publicos
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/**").permitAll()
+                                .requestMatchers("/").permitAll()
 
                                 // endpoints privados
                                 //.requestMatchers("/admin/**").hasRole("ADMIN")
