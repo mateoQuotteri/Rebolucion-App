@@ -1,13 +1,22 @@
 package com.rebolucion.app.Servicio;
 
+import com.rebolucion.app.Auth.AuthResponse;
+import com.rebolucion.app.Dtos.Entrada.TemaEntradaDto;
+import com.rebolucion.app.Dtos.Entrada.UsuarioEntradaDto;
+import com.rebolucion.app.Dtos.Salida.TemaSalidaDto;
 import com.rebolucion.app.Dtos.Salida.UsuarioSalidaDto;
+import com.rebolucion.app.Entidades.Rol;
+import com.rebolucion.app.Entidades.Tema;
 import com.rebolucion.app.Entidades.Usuario;
 import com.rebolucion.app.Excepciones.RecursoNoEncontradoExcepcion;
+import com.rebolucion.app.Repositorio.TemaRepositorio;
 import com.rebolucion.app.Repositorio.UsuarioRepositorio;
 import com.rebolucion.app.Utiles.JsonPrinter;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +29,7 @@ public class AdminServicio {
 
 
     private final UsuarioRepositorio usuarioRepository;
+    private final TemaRepositorio temaRepositorio;
     private final ModelMapper modelMapper;
 
     public List<UsuarioSalidaDto> listarUsuarios() {
@@ -58,4 +68,39 @@ public class AdminServicio {
             LOGGER.warn("Se ha eliminado el usuario con id: {}", + id);
         } else throw new RecursoNoEncontradoExcepcion("No se ha encontrado ningun usuario con el ID: " + id);
     }
+
+
+
+
+    //METODOS TEMAS
+    public ResponseEntity<TemaSalidaDto> agregarTema(@Valid TemaEntradaDto request) {
+
+        Tema tema = Tema.builder()
+                .icono(request.getIcono())
+                .hecho(request.getHecho())
+                .nombre(request.getNombre())
+                .build();
+
+        // Guardar el Tema en la base de datos
+        Tema temaGuardado = temaRepositorio.save(tema);
+
+        // Convertir el Tema guardado en un TemaSalidaDto
+        TemaSalidaDto temaSalidaDto = TemaSalidaDto.builder()
+                .icono(temaGuardado.getIcono())
+                .hecho(temaGuardado.getHecho())
+                .nombre(temaGuardado.getNombre())
+                .build();
+
+        // Retornar el TemaSalidaDto en la respuesta
+        return ResponseEntity.ok(temaSalidaDto);
+
+    }
+
+
+
+
+
+    // METODOS MOULOS
+
+    //METODOS UNIDADES
 }
