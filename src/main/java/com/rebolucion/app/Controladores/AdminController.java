@@ -2,6 +2,7 @@ package com.rebolucion.app.Controladores;
 
 
 import com.rebolucion.app.Dtos.Salida.UsuarioSalidaDto;
+import com.rebolucion.app.Excepciones.RecursoNoEncontradoExcepcion;
 import com.rebolucion.app.Servicio.AdminServicio;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,5 +28,12 @@ public class AdminController {
     @GetMapping("/usuario/{id}")
     public ResponseEntity<UsuarioSalidaDto> buscarUsuarioPorId(@PathVariable Long id){
         return new ResponseEntity<>(adminService.buscarUsuarioPorId(id), HttpStatus.OK);
+    }
+
+
+    @DeleteMapping("/eliminar-usuario/{id}")
+    public ResponseEntity<?> eliminarUsuarioPorId(@PathVariable Long id) throws RecursoNoEncontradoExcepcion {
+        adminService.eliminarUsuario(id);
+        return new ResponseEntity<>("Usuario eliminado correctamente: ", HttpStatus.NO_CONTENT);
     }
 }

@@ -2,6 +2,7 @@ package com.rebolucion.app.Servicio;
 
 import com.rebolucion.app.Dtos.Salida.UsuarioSalidaDto;
 import com.rebolucion.app.Entidades.Usuario;
+import com.rebolucion.app.Excepciones.RecursoNoEncontradoExcepcion;
 import com.rebolucion.app.Repositorio.UsuarioRepositorio;
 import com.rebolucion.app.Utiles.JsonPrinter;
 import lombok.RequiredArgsConstructor;
@@ -49,5 +50,12 @@ public class AdminServicio {
         }
 
         return usuarioEncontrado;
+    }
+
+    public void eliminarUsuario(Long id) throws RecursoNoEncontradoExcepcion{
+        if (buscarUsuarioPorId(id) != null){
+            usuarioRepository.deleteById(id);
+            LOGGER.warn("Se ha eliminado el usuario con id: {}", + id);
+        } else throw new RecursoNoEncontradoExcepcion("No se ha encontrado ningun usuario con el ID: " + id);
     }
 }
