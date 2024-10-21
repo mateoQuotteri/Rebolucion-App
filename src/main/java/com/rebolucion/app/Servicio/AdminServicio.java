@@ -97,7 +97,17 @@ public class AdminServicio {
     }
 
 
+    public List<TemaSalidaDto> listarTemas() {
 
+        List<TemaSalidaDto> temaSalidaDtos = temaRepositorio.findAll()
+                .stream()
+                .map(tema -> modelMapper.map(tema, TemaSalidaDto.class)
+                )
+                .toList();
+
+        LOGGER.info("Lista de temas registrados: {}", JsonPrinter.toString(temaSalidaDtos));
+        return temaSalidaDtos;
+    }
 
 
     // METODOS MOULOS

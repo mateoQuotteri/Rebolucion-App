@@ -58,6 +58,11 @@ public class AdminController {
         return new ResponseEntity(adminService.agregarTema(request), HttpStatus.OK);
     }
 
+    @GetMapping("/temas")
+    public ResponseEntity<List<TemaSalidaDto>> listarTemas(){
+        return new ResponseEntity<>(adminService.listarTemas(), HttpStatus.OK);
+    }
+
     // ENDPOINTS REFERIDOS A MODULOS
 
 
