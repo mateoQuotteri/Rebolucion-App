@@ -109,6 +109,24 @@ public class AdminServicio {
         return temaSalidaDtos;
     }
 
+    public TemaSalidaDto buscarTemaPorId(Long id) {
+        Tema temaBuscado = temaRepositorio.findById(id).orElse(null);
+        TemaSalidaDto temaEncontrado = null;
+
+        try{
+            if (temaBuscado != null){
+                temaEncontrado = modelMapper.map(temaBuscado, TemaSalidaDto.class);
+                LOGGER.info("Tema encontrado: {}", JsonPrinter.toString(temaEncontrado));
+            } else LOGGER.error("Tema no encontrado: {}", JsonPrinter.toString(temaBuscado));
+            return temaEncontrado;
+        }catch (Exception e){
+            LOGGER.info("Error: {}", e);
+
+        }
+
+        return temaEncontrado;
+    }
+
 
     // METODOS MOULOS
 

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TemaSalidaDto {
+    private Long id;
     private String nombre;
     private String icono;
     private Boolean hecho;

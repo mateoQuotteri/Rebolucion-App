@@ -62,6 +62,10 @@ public class AdminController {
     public ResponseEntity<List<TemaSalidaDto>> listarTemas(){
         return new ResponseEntity<>(adminService.listarTemas(), HttpStatus.OK);
     }
+    @GetMapping("/tema/{id}")
+    public ResponseEntity<TemaSalidaDto> buscarTemaPorId(@PathVariable Long id){
+        return new ResponseEntity<>(adminService.buscarTemaPorId(id), HttpStatus.OK);
+    }
 
     // ENDPOINTS REFERIDOS A MODULOS
 
