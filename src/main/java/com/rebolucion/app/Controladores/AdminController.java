@@ -66,6 +66,17 @@ public class AdminController {
     public ResponseEntity<TemaSalidaDto> buscarTemaPorId(@PathVariable Long id){
         return new ResponseEntity<>(adminService.buscarTemaPorId(id), HttpStatus.OK);
     }
+    @DeleteMapping("/eliminar-tema/{id}")
+    public ResponseEntity<?> eliminarTemaPorId(@PathVariable Long id) throws RecursoNoEncontradoExcepcion {
+        adminService.eliminarTemaPorId(id);
+        return new ResponseEntity<>("Tema eliminado correctamente: ", HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping("/modificar-tema/{id}")
+    public ResponseEntity<TemaSalidaDto> modificarTema(@RequestBody TemaEntradaDto tema, @PathVariable Long id) throws RecursoNoEncontradoExcepcion {
+        return new ResponseEntity<>(adminService.modificarTema(tema, id), HttpStatus.OK);
+    }
+
 
     // ENDPOINTS REFERIDOS A MODULOS
 

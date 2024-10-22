@@ -128,6 +128,52 @@ public class AdminServicio {
     }
 
 
+    public void eliminarTemaPorId(Long id) throws RecursoNoEncontradoExcepcion{
+        if (buscarTemaPorId(id) != null){
+            temaRepositorio.deleteById(id);
+            LOGGER.warn("Se ha eliminado el tema con id: {}", + id);
+        } else throw new RecursoNoEncontradoExcepcion("No se ha encontrado ningun usuario con el ID: " + id);
+    }
+
+
+
+    public TemaSalidaDto modificarTema(TemaEntradaDto temaEntradaDto, Long id) throws RecursoNoEncontradoExcepcion {
+
+        Tema temaIngresado = modelMapper.map(temaEntradaDto, Tema.class);
+        Tema temaActualizar = temaRepositorio.findById(id).orElse(null);
+
+        TemaSalidaDto temaSalidaDto;
+
+        if (temaActualizar != null){
+            // Solo actualiza los campos que no son nulos en usuarioEntradaDto
+            if (temaEntradaDto.getHecho() != null) {
+                temaActualizar.setHecho(temaEntradaDto.getHecho());
+            }
+            if (temaEntradaDto.getIcono() != null) {
+                temaActualizar.setIcono(temaEntradaDto.getIcono());
+            }
+            if (temaEntradaDto.getNombre() != null) {
+                temaActualizar.setNombre(temaEntradaDto.getNombre());
+            }
+
+
+            // Log antes de guardar
+            LOGGER.info("Actualizando tema con ID: " + id + " con los nuevos datos: " + temaActualizar);
+
+            temaRepositorio.save(temaActualizar);
+
+            // Log después de guardar
+            LOGGER.info("Usuario con ID: " + id + " actualizado exitosamente.");
+
+            temaSalidaDto = modelMapper.map(temaActualizar, TemaSalidaDto.class);
+        } else {
+            LOGGER.error("No fue posible actualizar los datos del tema ya que no se encuentra en la base de datos");
+            throw new RecursoNoEncontradoExcepcion("No es posible actualizar el tema con ID: " + id + "ya que no se encuentra en la base de datos");
+        }
+
+        return temaSalidaDto;
+    }
+
     // METODOS MOULOS
 
     //METODOS UNIDADES
