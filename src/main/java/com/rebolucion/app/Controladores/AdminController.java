@@ -2,8 +2,10 @@ package com.rebolucion.app.Controladores;
 
 
 import com.rebolucion.app.Auth.AuthResponse;
+import com.rebolucion.app.Dtos.Entrada.ModuloEntradaDto;
 import com.rebolucion.app.Dtos.Entrada.TemaEntradaDto;
 import com.rebolucion.app.Dtos.Entrada.UsuarioEntradaDto;
+import com.rebolucion.app.Dtos.Salida.ModuloSalidaDto;
 import com.rebolucion.app.Dtos.Salida.TemaSalidaDto;
 import com.rebolucion.app.Dtos.Salida.UsuarioSalidaDto;
 import com.rebolucion.app.Entidades.Tema;
@@ -80,7 +82,15 @@ public class AdminController {
 
     // ENDPOINTS REFERIDOS A MODULOS
 
+    @PostMapping("/agregar-modulo")
+    public ResponseEntity<ModuloSalidaDto> agregarModulo(@Valid @RequestBody ModuloEntradaDto request) throws RecursoNoEncontradoExcepcion {
+        return new ResponseEntity(adminService.agregarModulo(request), HttpStatus.OK);
+    }
 
+  @GetMapping("/modulos")
+    public ResponseEntity<List<ModuloSalidaDto>> listarModulos(){
+        return new ResponseEntity<>(adminService.listarModulos(), HttpStatus.OK);
+    }
 
     // ENDPOINTS REFERIDOS A UNIDADES
 

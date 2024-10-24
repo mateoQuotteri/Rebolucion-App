@@ -1,20 +1,22 @@
 package com.rebolucion.app.Servicio;
 
-import com.rebolucion.app.Auth.AuthResponse;
+import com.rebolucion.app.Dtos.Entrada.ModuloEntradaDto;
 import com.rebolucion.app.Dtos.Entrada.TemaEntradaDto;
-import com.rebolucion.app.Dtos.Entrada.UsuarioEntradaDto;
+import com.rebolucion.app.Dtos.Salida.ModuloSalidaDto;
 import com.rebolucion.app.Dtos.Salida.TemaSalidaDto;
 import com.rebolucion.app.Dtos.Salida.UsuarioSalidaDto;
-import com.rebolucion.app.Entidades.Rol;
+import com.rebolucion.app.Entidades.Modulo;
 import com.rebolucion.app.Entidades.Tema;
 import com.rebolucion.app.Entidades.Usuario;
 import com.rebolucion.app.Excepciones.RecursoNoEncontradoExcepcion;
+import com.rebolucion.app.Repositorio.ModuloRepositorio;
 import com.rebolucion.app.Repositorio.TemaRepositorio;
 import com.rebolucion.app.Repositorio.UsuarioRepositorio;
 import com.rebolucion.app.Utiles.JsonPrinter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,11 +27,12 @@ import java.util.List;
 @RequiredArgsConstructor
 
 public class AdminServicio {
-    private final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(AuthServicio.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(AuthServicio.class);
 
 
     private final UsuarioRepositorio usuarioRepository;
     private final TemaRepositorio temaRepositorio;
+    private final ModuloRepositorio moduloRepositorio;
     private final ModelMapper modelMapper;
 
     public List<UsuarioSalidaDto> listarUsuarios() {
@@ -175,6 +178,55 @@ public class AdminServicio {
     }
 
     // METODOS MOULOS
+    public ResponseEntity<ModuloSalidaDto> agregarModulo(@Valid ModuloEntradaDto request)  throws  RecursoNoEncontradoExcepcion {
+
+        Tema temaCorrespondiente = temaRepositorio.findById(request.getTemaId()).orElse(null);
+        
+        ModuloSalidaDto moduloParaDevolver = null;
+        if (temaCorrespondiente != null) {
+            Modulo modulo = Modulo.builder()
+                    .nombre(request.getNombre())
+                    .descripcion(request.getDescripcion())
+                    .dificultad(request.getDificultad())
+                    .tema(temaCorrespondiente)
+                    .profesor(request.getProfesor())
+                    .build();
+
+            Modulo moduloGuardado = moduloRepositorio.save(modulo);
+
+            TemaSalidaDto temaSalidaDto = modelMapper.map(temaCorrespondiente, TemaSalidaDto.class);
+
+            // Convertir el Tema guardado en un TemaSalidaDto
+            ModuloSalidaDto moduloSalidaDto = ModuloSalidaDto.builder()
+                    .nombre(moduloGuardado.getNombre())
+                    .descripcion(moduloGuardado.getDescripcion())
+                    .dificultad(moduloGuardado.getDificultad())
+                    .profesor(moduloGuardado.getProfesor())
+                    .temaSalidaDto(temaSalidaDto)
+                    .build();
+
+           moduloParaDevolver = moduloSalidaDto;
+        }
+
+        return ResponseEntity.ok(moduloParaDevolver);
+    }
+
+    public List<ModuloSalidaDto> listarModulos() {
+
+        List<ModuloSalidaDto> moduloSalidaDtos = moduloRepositorio.findAll()
+                .stream()
+                .map(modulo -> {
+                    ModuloSalidaDto dto = modelMapper.map(modulo, ModuloSalidaDto.class);
+                    if (modulo.getTema() != null) {
+                        TemaSalidaDto temaSalidaDto = modelMapper.map(modulo.getTema(), TemaSalidaDto.class);
+                        dto.setTemaSalidaDto(temaSalidaDto);
+                    }
+                    return dto;
+                })
+                .toList();
+        return moduloSalidaDtos;
+    }}
+
 
     //METODOS UNIDADES
-}
+

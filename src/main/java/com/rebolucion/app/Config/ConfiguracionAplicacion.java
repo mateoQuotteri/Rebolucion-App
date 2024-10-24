@@ -1,6 +1,8 @@
 package com.rebolucion.app.Config;
 
 
+import com.rebolucion.app.Dtos.Salida.ModuloSalidaDto;
+import com.rebolucion.app.Entidades.Modulo;
 import com.rebolucion.app.Repositorio.UsuarioRepositorio;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -62,8 +64,14 @@ public class ConfiguracionAplicacion {
     }
 
     @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
+    public ModelMapper modelMapper() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        // Agrega aquí la configuración personalizada para el mapeo
+        modelMapper.createTypeMap(Modulo.class, ModuloSalidaDto.class)
+                .addMappings(mapper -> mapper.map(Modulo::getTema, ModuloSalidaDto::setTemaSalidaDto));
+
+        return modelMapper;
     }
 
 }

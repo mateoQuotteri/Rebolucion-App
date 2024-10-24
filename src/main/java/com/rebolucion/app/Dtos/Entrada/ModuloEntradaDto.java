@@ -1,21 +1,29 @@
 package com.rebolucion.app.Dtos.Entrada;
 
-
+import com.rebolucion.app.Entidades.Tema;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TemaEntradaDto {
+public class ModuloEntradaDto {
+
     @NotNull
     private String nombre;
     @NotNull
-
-    private String icono;
+    private Integer dificultad;
     @NotNull
 
-    private Boolean hecho;
+    private String profesor;
+    @NotNull
+
+    private String descripcion;
+
+    @NotNull
+    private Long temaId;
+
 }
