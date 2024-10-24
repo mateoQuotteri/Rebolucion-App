@@ -8,14 +8,17 @@ import com.rebolucion.app.Dtos.Entrada.UsuarioEntradaDto;
 import com.rebolucion.app.Dtos.Salida.ModuloSalidaDto;
 import com.rebolucion.app.Dtos.Salida.TemaSalidaDto;
 import com.rebolucion.app.Dtos.Salida.UsuarioSalidaDto;
+import com.rebolucion.app.Entidades.Modulo;
 import com.rebolucion.app.Entidades.Tema;
 import com.rebolucion.app.Excepciones.RecursoNoEncontradoExcepcion;
-import com.rebolucion.app.Servicio.AdminServicio;
+import com.rebolucion.app.Servicio.ModuloServicio;
+import com.rebolucion.app.Servicio.TemaServicio;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.rebolucion.app.Servicio.AdminServicio;
 
 import java.util.List;
 
@@ -26,6 +29,9 @@ import java.util.List;
 public class AdminController {
 
     private final AdminServicio adminService;
+    private final TemaServicio temaServicio;
+    private final ModuloServicio moduloServicio;
+
 
 
     // ENDPOINTS REFERIDOS A USUARIOS
@@ -57,26 +63,26 @@ public class AdminController {
     // ENDPOINTS REFERIDOS A TEMAS
     @PostMapping("/agregar-tema")
     public ResponseEntity<TemaSalidaDto> agregarTema(@Valid @RequestBody TemaEntradaDto request){
-        return new ResponseEntity(adminService.agregarTema(request), HttpStatus.OK);
+        return new ResponseEntity(temaServicio.agregarTema(request), HttpStatus.OK);
     }
 
     @GetMapping("/temas")
     public ResponseEntity<List<TemaSalidaDto>> listarTemas(){
-        return new ResponseEntity<>(adminService.listarTemas(), HttpStatus.OK);
+        return new ResponseEntity<>(temaServicio.listarTemas(), HttpStatus.OK);
     }
     @GetMapping("/tema/{id}")
     public ResponseEntity<TemaSalidaDto> buscarTemaPorId(@PathVariable Long id){
-        return new ResponseEntity<>(adminService.buscarTemaPorId(id), HttpStatus.OK);
+        return new ResponseEntity<>(temaServicio.buscarTemaPorId(id), HttpStatus.OK);
     }
     @DeleteMapping("/eliminar-tema/{id}")
     public ResponseEntity<?> eliminarTemaPorId(@PathVariable Long id) throws RecursoNoEncontradoExcepcion {
-        adminService.eliminarTemaPorId(id);
+        temaServicio.eliminarTemaPorId(id);
         return new ResponseEntity<>("Tema eliminado correctamente: ", HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/modificar-tema/{id}")
     public ResponseEntity<TemaSalidaDto> modificarTema(@RequestBody TemaEntradaDto tema, @PathVariable Long id) throws RecursoNoEncontradoExcepcion {
-        return new ResponseEntity<>(adminService.modificarTema(tema, id), HttpStatus.OK);
+        return new ResponseEntity<>(temaServicio.modificarTema(tema, id), HttpStatus.OK);
     }
 
 
@@ -84,12 +90,17 @@ public class AdminController {
 
     @PostMapping("/agregar-modulo")
     public ResponseEntity<ModuloSalidaDto> agregarModulo(@Valid @RequestBody ModuloEntradaDto request) throws RecursoNoEncontradoExcepcion {
-        return new ResponseEntity(adminService.agregarModulo(request), HttpStatus.OK);
+        return new ResponseEntity(moduloServicio.agregarModulo(request), HttpStatus.OK);
     }
 
   @GetMapping("/modulos")
     public ResponseEntity<List<ModuloSalidaDto>> listarModulos(){
-        return new ResponseEntity<>(adminService.listarModulos(), HttpStatus.OK);
+        return new ResponseEntity<>(moduloServicio.listarModulos(), HttpStatus.OK);
+    }
+
+    @GetMapping("/modulo/{id}")
+    public ResponseEntity<ModuloSalidaDto> buscarModuloporId(@PathVariable Long id){
+        return new ResponseEntity<>(moduloServicio.buscarModuloPorId(id), HttpStatus.OK);
     }
 
     // ENDPOINTS REFERIDOS A UNIDADES
